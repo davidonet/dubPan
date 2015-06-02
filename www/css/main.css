@@ -1,0 +1,65 @@
+
+@font-face {
+    font-family: 'decima_monoregular';
+    src: url('../fonts/decima_mono-webfont.eot');
+    src: url('../fonts/decima_mono-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/decima_mono-webfont.woff2') format('woff2'),
+         url('../fonts/decima_mono-webfont.woff') format('woff'),
+         url('../fonts/decima_mono-webfont.ttf') format('truetype'),
+         url('../fonts/decima_mono-webfont.svg#decima_monoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+@font-face {
+    font-family: 'decima_monobold';
+    src: url('../fonts/decima_mono_bold-webfont.eot');
+    src: url('../fonts/decima_mono_bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/decima_mono_bold-webfont.woff2') format('woff2'),
+         url('../fonts/decima_mono_bold-webfont.woff') format('woff'),
+         url('../fonts/decima_mono_bold-webfont.ttf') format('truetype'),
+         url('../fonts/decima_mono_bold-webfont.svg#decima_monobold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+html, body, .btn{
+    font-family: 'decima_monobold';
+}
+
+
+.thumb {
+    border: solid 1px black;
+    margin-left: 120px;
+    margin-top: 120px;
+}
+
+.player {
+    border: solid 1px black;
+    margin-left: 120px;
+    margin-top: 120px;
+}
+
+#control {
+    float: right;
+    margin-left: 120px;
+    margin-right: 120px;
+    width: 440px;
+}
+
+.btn-lg{
+	width:100%;
+}
+
+.btn-hf{
+	width:auto;
+}
+
+.btn{
+	margin-top: 60px;
+}
