@@ -13,7 +13,9 @@ $(function() {
         //__log('Input connected to audio context destination.');
 
         recorder = new Recorder(input, {
-            workerPath: "js/recorderWorker.js"
+            workerPath: "js/recorderWorker.js",
+            numChannels: 1
+
         });
         console.log('Recorder initialised.');
     }
@@ -83,11 +85,9 @@ function review() {
     if (currentElt !== undefined) {
         recorder.getBuffer(function(buffers) {
             var newSource = audio_context.createBufferSource();
-            var newBuffer = audio_context.createBuffer(2, buffers[0].length, audio_context.sampleRate);
+            var newBuffer = audio_context.createBuffer(1, buffers[0].length, audio_context.sampleRate);
             newBuffer.getChannelData(0).set(buffers[0]);
-            newBuffer.getChannelData(1).set(buffers[1]);
             newSource.buffer = newBuffer;
-
             newSource.connect(audio_context.destination);
             newSource.start(0);
             currentElt[0].play();
@@ -101,6 +101,23 @@ var ended = function ended() {
     currentElt[0].currentTime = 0;
     console.log("ended");
 }
+
+function publish() {
+    recorder.exportWAV(function(b64) {
+        form = new FormData();
+        form.append("video", currentElt.attr('id'));
+        form.append("sound", b64, "audiodub");
+        console.log(form);
+        request = new XMLHttpRequest();
+        request.open(
+            "POST",
+            "/upload",
+            true
+        );
+        request.send(form);
+    });
+}
+
 
 function cancel() {
     if (currentElt !== undefined) {
