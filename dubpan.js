@@ -8,7 +8,8 @@ var google = require("googleapis"),
     yt = google.youtube('v3'),
     fs = require("fs");
 
-
+var redis = require("redis"),
+    client = redis.createClient();
 
 var oauth2Client = new google.auth.OAuth2(global.clientId, global.appSecret, global.redirectUrl);
 
@@ -25,8 +26,8 @@ var rl = readline.createInterface({
 var tokens;
 try {
     tokens = JSON.parse(fs.readFileSync('./tokens.json', 'utf8'));
-      console.log("tokens loaded");
-} catch(e) {
+    console.log("tokens loaded");
+} catch (e) {
 
     console.log('Visit the url: ', url);
     rl.question('Enter the code here:', function(code) {
@@ -71,7 +72,11 @@ function uploadToYoutube(video_file, title, description, callback) {
 
 };
 
-
+function pad(num, size) {
+    var s = num + "";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
 
 app.use(multer({
     dest: '/tmp/'
@@ -95,12 +100,20 @@ app.post('/upload', function(req, res) {
                 console.log('Signal received: ' + error.signal);
             }
         });
-        uploadToYoutube("/tmp/test.webm", "Test", "Un test de post de nodejs", function(err, data) {
-            console.log("done", err, "https://www.youtube.com/watch?v=" + data);
+        client.select(3, function(err) {
+            client.incr("dpcount", function(err, dpcount) {
+                var dpid = "dp"+pad(dpcount, 4);
+                uploadToYoutube("/tmp/test.webm", "Test", "Un test de post de nodejs", function(err, data) {
+                    client.set(dpid, "https://www.youtube.com/watch?v=" + data, function(err, ret) {
+                        console.log("done yt upload", err, dpid, "https://www.youtube.com/watch?v=" + data);
+                    });
 
-            res.json({
-                success: true,
-                youtube: "https://www.youtube.com/watch?v=" + data
+                });
+
+                res.json({
+                    success: true,
+                    dpid: dpid
+                });
             });
         });
     });

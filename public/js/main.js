@@ -115,8 +115,10 @@ function publish() {
             true
         );
         request.send(form);
-        request.onload = function(){
+        request.onload = function() {
             console.log(this.responseText);
+            $("#dplink").text("http://p4n.it/" + JSON.parse(this.responseText).dpid);
+            $('#linkbox').show();
         };
     });
 }
