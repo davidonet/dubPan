@@ -115,6 +115,9 @@ function publish() {
             true
         );
         request.send(form);
+        request.onload = function(){
+            console.log(this.responseText);
+        };
     });
 }
 
@@ -132,6 +135,7 @@ function cancel() {
             });
             $(".thumb").each(function() {
                 this.play();
+                this.loop = -1;
             });
         });
 

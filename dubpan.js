@@ -1,8 +1,77 @@
 var express = require('express');
 var multer = require('multer');
 var childProcess = require('child_process');
-
 var app = express();
+var cred = require('./credential');
+var readline = require('readline');
+var google = require("googleapis"),
+    yt = google.youtube('v3'),
+    fs = require("fs");
+
+
+
+var oauth2Client = new google.auth.OAuth2(global.clientId, global.appSecret, global.redirectUrl);
+
+var url = oauth2Client.generateAuthUrl({
+    access_type: 'offline', // 'online' (default) or 'offline' (gets refresh_token)
+    scope: "https://www.googleapis.com/auth/youtube.upload" // If you only need one scope you can pass it as string
+});
+
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+var tokens;
+try {
+    tokens = JSON.parse(fs.readFileSync('./tokens.json', 'utf8'));
+      console.log("tokens loaded");
+} catch(e) {
+
+    console.log('Visit the url: ', url);
+    rl.question('Enter the code here:', function(code) {
+        oauth2Client.getToken(code, function(err, ttokens) {
+            tokens = ttokens;
+            console.log(err, ttokens);
+            fs.writeFile('./tokens.json', JSON.stringify(tokens), function(err) {
+                if (err) return console.log(err);
+                console.log("tokens saved");
+            });
+        });
+    });
+}
+
+function uploadToYoutube(video_file, title, description, callback) {
+    var oauth2Client = new google.auth.OAuth2(global.clientId, global.appSecret, global.redirectUrl);
+    oauth2Client.setCredentials(tokens);
+    google.options({
+        auth: oauth2Client
+    });
+    return yt.videos.insert({
+        part: 'status,snippet',
+        resource: {
+            snippet: {
+                title: title,
+                description: description
+            },
+            status: {
+                privacyStatus: 'unlisted' //if you want the video to be private
+            }
+        },
+        media: {
+            body: fs.createReadStream(video_file)
+        }
+    }, function(error, data) {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, data.id);
+        }
+    });
+
+};
+
+
 
 app.use(multer({
     dest: '/tmp/'
@@ -19,7 +88,6 @@ app.post('/upload', function(req, res) {
         }
     });
     conProc.on('exit', function(code) {
-        console.log("done");
         childProcess.exec('rm -f ' + req.files.sound.path, function(error, stdout, stderr) {
             if (error) {
                 console.log(error.stack);
@@ -27,8 +95,13 @@ app.post('/upload', function(req, res) {
                 console.log('Signal received: ' + error.signal);
             }
         });
-        res.json({
-            success: true
+        uploadToYoutube("/tmp/test.webm", "Test", "Un test de post de nodejs", function(err, data) {
+            console.log("done", err, "https://www.youtube.com/watch?v=" + data);
+
+            res.json({
+                success: true,
+                youtube: "https://www.youtube.com/watch?v=" + data
+            });
         });
     });
 });
