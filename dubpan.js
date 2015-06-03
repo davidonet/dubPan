@@ -9,7 +9,7 @@ var google = require("googleapis"),
     fs = require("fs");
 
 var redis = require("redis"),
-    client = redis.createClient();
+    client = redis.createClient(6379, '95.142.164.71', {});
 
 var oauth2Client = new google.auth.OAuth2(global.clientId, global.appSecret, global.redirectUrl);
 
