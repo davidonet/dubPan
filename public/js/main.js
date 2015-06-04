@@ -122,9 +122,12 @@ function publish() {
         });
 
         request.onload = function() {
-            $(".progress").hide();
+            $("#progress").hide();
             $("#dplink").text("http://p4n.it/" + JSON.parse(this.responseText).dpid);
             $("#dplink").fadeIn();
+            $("#uploadprogress").css({
+                width: "0%"
+            });
             setTimeout(function() {
                 $('#linkbox').fadeOut();
                 cancel();
@@ -137,7 +140,7 @@ function publish() {
             true
         );
 
-        $(".progress").show();
+        $("#progress").show();
         $("#dplink").hide();
         $('#linkbox').fadeIn();
         request.send(form);
