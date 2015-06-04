@@ -110,16 +110,16 @@ function publish() {
         console.log(form);
         request = new XMLHttpRequest();
 
-        request.onprogress = function(oEvent) {
+        request.upload.addEventListener("progress", function(oEvent) {
             if (oEvent.lengthComputable) {
-                var percentComplete = 100*(oEvent.loaded / oEvent.total);
+                var percentComplete = 100 * (oEvent.loaded / oEvent.total);
                 $("#uploadprogress").css({
                     width: percentComplete + "%"
                 });
             } else {
 
             }
-        };
+        });
 
         request.onload = function() {
             $(".progress").hide();
