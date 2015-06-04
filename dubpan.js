@@ -103,7 +103,7 @@ app.post('/upload', function(req, res) {
         client.select(3, function(err) {
             client.incr("dpcount", function(err, dpcount) {
                 var dpid = "dp"+pad(dpcount, 4);
-                uploadToYoutube("/tmp/test.webm", "Test", "Un test de post de nodejs", function(err, data) {
+                uploadToYoutube("/tmp/test.webm", "DubbingPanacée #"+dpcount, "Un dispositif proposé dans le cadre de l'exposition His Master’s Voice du 17/06/15 au 20/09/15 à La Panacée centre de culture contemporaine - http://lapanacee.org", function(err, data) {
                     client.set(dpid, "https://www.youtube.com/watch?v=" + data, function(err, ret) {
                         console.log("done yt upload", err, dpid, "https://www.youtube.com/watch?v=" + data);
                     });
