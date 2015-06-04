@@ -109,20 +109,10 @@ function publish() {
         form.append("sound", b64, "audiodub");
         console.log(form);
         request = new XMLHttpRequest();
-        request.open(
-            "POST",
-            "/upload",
-            true
-        );
-
-        request.send(form);
-        $(".progress").show();
-        $("#dplink").hide();
-        $('#linkbox').fadeIn();
 
         request.onprogress = function(oEvent) {
             if (oEvent.lengthComputable) {
-                var percentComplete = oEvent.loaded / oEvent.total;
+                var percentComplete = 100*(oEvent.loaded / oEvent.total);
                 $("#uploadprogress").css({
                     width: percentComplete + "%"
                 });
@@ -140,6 +130,19 @@ function publish() {
                 cancel();
             }, 8000);
         };
+
+        request.open(
+            "POST",
+            "/upload",
+            true
+        );
+
+        $(".progress").show();
+        $("#dplink").hide();
+        $('#linkbox').fadeIn();
+        request.send(form);
+
+
     });
 };
 
