@@ -84,7 +84,7 @@ app.use(multer({
 app.use('/', express.static('public'));
 
 app.post('/upload', function(req, res) {
-    var conProc = childProcess.exec('ffmpeg -y -i public/videos/' + req.body.video + '.webm -i ' + req.files.sound.path + ' -vcodec copy /tmp/test.webm', function(error, stdout, stderr) {
+    var conProc = childProcess.exec('avconv -y -i public/videos/' + req.body.video + '.webm -i ' + req.files.sound.path + ' -vcodec copy /tmp/test.webm', function(error, stdout, stderr) {
 
         if (error) {
             console.log(error.stack);
