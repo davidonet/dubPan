@@ -26,7 +26,7 @@ $(function() {
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
     window.URL = window.URL || window.webkitURL;
 
-    audio_context = new AudioContext;
+    audio_context = new AudioContext();
     console.log('Audio context set up.');
     console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
 
@@ -100,7 +100,7 @@ var ended = function ended() {
     recorder.stop();
     currentElt[0].currentTime = 0;
     console.log("ended");
-}
+};
 
 function publish() {
     recorder.exportWAV(function(b64) {
@@ -114,14 +114,34 @@ function publish() {
             "/upload",
             true
         );
+
         request.send(form);
+        $(".progress").show();
+        $("#dplink").hide();
+        $('#linkbox').fadeIn();
+
+        request.onprogress = function(oEvent) {
+            if (oEvent.lengthComputable) {
+                var percentComplete = oEvent.loaded / oEvent.total;
+                $("#uploadprogress").css({
+                    width: percentComplete + "%"
+                });
+            } else {
+
+            }
+        };
+
         request.onload = function() {
-            console.log(this.responseText);
+            $(".progress").hide();
             $("#dplink").text("http://p4n.it/" + JSON.parse(this.responseText).dpid);
-            $('#linkbox').show();
+            $("#dplink").fadeIn();
+            setTimeout(function() {
+                $('#linkbox').fadeOut();
+                cancel();
+            }, 8000);
         };
     });
-}
+};
 
 
 function cancel() {
