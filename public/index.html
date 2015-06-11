@@ -50,11 +50,11 @@
         </video>
     </div>
     <div id="control">
-        <a href="#" class="btn btn-lg btn-default" onclick="play()">VOIR / PLAY</a>
-        <a href="#" class="btn btn-lg btn-default" onclick="dub()">DOUBLER / DUB</a>
-        <a href="#" class="btn btn-lg btn-default" onclick="review()">REVOIR / REVIEW</a>
-        <a href="#" class="btn btn-hf btn-default" onclick="publish()">PUBLIER  / PUBLISH</a>
-        <a href="#" class="btn btn-hf btn-default pull-right" onclick="cancel()">ANNULER / CANCEL</a>
+        <a href="#" id="bplay" class="btn btn-lg btn-default" onclick="play()">VOIR / PLAY</a>
+        <a href="#" id="bdub" class="btn btn-lg btn-default"  disabled onclick="dub()">DOUBLER / DUB</a>
+        <a href="#" id="brev" class="btn btn-lg btn-default" disabled onclick="review()">REVOIR / REVIEW</a>
+        <a href="#" id="bpub" class="btn btn-hf btn-default" disabled onclick="publish()">PUBLIER  / PUBLISH</a>
+        <a href="#" id="bcancel" class="btn btn-hf btn-default pull-right" onclick="cancel()">ANNULER / CANCEL</a>
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/recorder.js"></script>

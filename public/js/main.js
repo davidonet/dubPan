@@ -1,13 +1,14 @@
 var currentElt;
 var recorder;
 var audio_context;
+var isDubPressed = false;
 
 $(function() {
 
 
     function startUserMedia(stream) {
         var input = audio_context.createMediaStreamSource(stream);
-        console.log('Media stream created.');
+        console.log("Media stream created.");
         // Uncomment if you want the audio to feedback directly
         //input.connect(audio_context.destination);
         //__log('Input connected to audio context destination.');
@@ -49,8 +50,19 @@ $(function() {
                 this.pause();
                 this.loop = 0;
                 this.currentTime = 0;
-                this.onended = ended;
             });
+            currentElt[0].onended = function ended() {
+                $("#bplay,#bdub").removeAttr("disabled");
+                if (isDubPressed) {
+                    $("#brev,#bpub").removeAttr("disabled");
+                }
+                recorder.stop();
+                currentElt[0].currentTime = 0;
+                console.log("player ended");
+            };
+            isDubPressed = false;
+            $("#bdub,#brev,#bpub").attr("disabled", "disabled");
+            $("#bplay").removeAttr("disabled");
             currentElt.toggleClass("thumb player");
             $("#grid").isotope({
                 filter: ".player"
@@ -66,23 +78,29 @@ $(function() {
     });
 });
 
+var ended
+
 
 function play() {
     if (currentElt !== undefined) {
+        $("#bplay,#bdub,#brev,#bpub").attr("disabled", "disabled");
         currentElt[0].play();
     }
 }
 
 function dub() {
     if (currentElt !== undefined) {
+        $("#bplay,#bdub,#brev,#bpub").attr("disabled", "disabled");
         currentElt[0].play();
         recorder.record();
+        isDubPressed = true;
     }
 
 }
 
 function review() {
     if (currentElt !== undefined) {
+        $("#bplay,#bdub,#brev,#bpub").attr("disabled", "disabled");
         recorder.getBuffer(function(buffers) {
             var newSource = audio_context.createBufferSource();
             var newBuffer = audio_context.createBuffer(1, buffers[0].length, audio_context.sampleRate);
@@ -96,11 +114,27 @@ function review() {
     }
 }
 
-var ended = function ended() {
-    recorder.stop();
-    currentElt[0].currentTime = 0;
-    console.log("ended");
-};
+function cancel() {
+    if (currentElt !== undefined) {
+        if (recorder !== undefined)
+            recorder.stop();
+        $("#control").toggle(300);
+        currentElt.animate({
+            width: "480px",
+            height: "360px",
+        }, 500, function() {
+            currentElt.toggleClass("thumb player");
+            $("#grid").isotope({
+                filter: ".thumb"
+            });
+            $(".thumb").each(function() {
+                this.play();
+                this.loop = -1;
+            });
+        });
+
+    }
+}
 
 function publish() {
     recorder.exportWAV(function(b64) {
@@ -147,25 +181,4 @@ function publish() {
 
 
     });
-};
-
-
-function cancel() {
-    if (currentElt !== undefined) {
-        $("#control").toggle(300);
-        currentElt.animate({
-            width: "480px",
-            height: "360px",
-        }, 500, function() {
-            currentElt.toggleClass("thumb player");
-            $("#grid").isotope({
-                filter: ".thumb"
-            });
-            $(".thumb").each(function() {
-                this.play();
-                this.loop = -1;
-            });
-        });
-
-    }
 }
