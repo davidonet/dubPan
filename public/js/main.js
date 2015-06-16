@@ -41,26 +41,35 @@ $(function() {
 
     $("#grid").isotope();
     $("#control").toggle();
+
     $(".thumb").click(function() {
+
         currentElt = $(this);
-        if (recorder !== undefined)
-            recorder.clear();
+
         if (currentElt.hasClass("thumb")) {
+
             $(".thumb").each(function() {
                 this.pause();
                 this.loop = 0;
                 this.currentTime = 0;
             });
+
+            if (recorder !== undefined)
+                recorder.clear();
+
             currentElt[0].onended = function ended() {
                 $("#bplay,#bdub").removeAttr("disabled");
                 if (isDubPressed) {
                     $("#brev,#bpub").removeAttr("disabled");
                 }
+
                 recorder.stop();
                 currentElt[0].currentTime = 0;
                 console.log("player ended");
             };
+
             isDubPressed = false;
+
             $("#bdub,#brev,#bpub").attr("disabled", "disabled");
             $("#bplay").removeAttr("disabled");
             currentElt.toggleClass("thumb player");
@@ -77,9 +86,6 @@ $(function() {
         }
     });
 });
-
-var ended
-
 
 function play() {
     if (currentElt !== undefined) {
