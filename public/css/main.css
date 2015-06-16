@@ -53,14 +53,16 @@ html, body, .btn{
 
 .btn-lg{
 	width:100%;
+  font-size: 200%;
 }
 
 .btn-hf{
 	width:auto;
+  font-size: 110%;
 }
 
 .btn{
-	margin-top: 60px;
+	margin-top: 60px;*
 }
 
 .modal {
