@@ -41,6 +41,16 @@ var isDubPressed = false;
 $(function() {
 
 
+    $("body").css({
+        "-webkit-touch-callout": "none",
+        "-webkit-user-select": "none",
+        "-khtml-user-select": "none",
+        "-moz-user-select": "none",
+        "-ms-user-select": "none",
+        "user-select": "none",
+        cursor: "none"
+    });
+
     function startUserMedia(stream) {
         var input = audio_context.createMediaStreamSource(stream);
         console.log("Media stream created.");
