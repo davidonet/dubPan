@@ -102,17 +102,19 @@ app.post('/upload', function(req, res) {
         });
         client.select(3, function(err) {
             client.incr("dpcount", function(err, dpcount) {
-                var dpid = "dp"+pad(dpcount, 4);
-                uploadToYoutube("/tmp/test.webm", "DubbingPanacée #"+dpcount, "Un dispositif proposé dans le cadre de l'exposition His Master’s Voice du 17/06/15 au 20/09/15 à La Panacée centre de culture contemporaine - http://lapanacee.org", function(err, data) {
+                var dpid = "dp" + pad(dpcount, 4);
+                uploadToYoutube("/tmp/test.webm", "DubbingPanacée #" + dpcount, "Un dispositif proposé dans le cadre de l'exposition His Master’s Voice du 17/06/15 au 20/09/15 à La Panacée centre de culture contemporaine - http://lapanacee.org", function(err, data) {
                     client.set(dpid, "https://www.youtube.com/watch?v=" + data, function(err, ret) {
                         console.log("done yt upload", err, dpid, "https://www.youtube.com/watch?v=" + data);
                     });
 
                 });
 
-                res.json({
-                    success: true,
-                    dpid: dpid
+                var conProc = childProcess.exec('cp /tmp/test.webm /home/cde/Dropbox/videodp/' + dpid + '.webm', function(error, stdout, stderr) {
+                    res.json({
+                        success: true,
+                        dpid: dpid
+                    });
                 });
             });
         });
