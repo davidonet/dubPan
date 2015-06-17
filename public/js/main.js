@@ -41,7 +41,7 @@ var newSource;
 
 $(function() {
 
-    /*
+    
         $("body").css({
             "-webkit-touch-callout": "none",
             "-webkit-user-select": "none",
@@ -51,7 +51,7 @@ $(function() {
             "user-select": "none",
             cursor: "none"
         });
-    */
+    
     function startUserMedia(stream) {
         var input = audio_context.createMediaStreamSource(stream);
         console.log("Media stream created.");
