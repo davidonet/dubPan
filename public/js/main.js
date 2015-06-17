@@ -2,6 +2,7 @@ var currentElt;
 var recorder;
 var audio_context;
 var isDubPressed = false;
+var newSource;
 
 (function(t, e) {
     "use strict";
@@ -40,17 +41,17 @@ var isDubPressed = false;
 
 $(function() {
 
-
-    $("body").css({
-        "-webkit-touch-callout": "none",
-        "-webkit-user-select": "none",
-        "-khtml-user-select": "none",
-        "-moz-user-select": "none",
-        "-ms-user-select": "none",
-        "user-select": "none",
-        cursor: "none"
-    });
-
+    /*
+        $("body").css({
+            "-webkit-touch-callout": "none",
+            "-webkit-user-select": "none",
+            "-khtml-user-select": "none",
+            "-moz-user-select": "none",
+            "-ms-user-select": "none",
+            "user-select": "none",
+            cursor: "none"
+        });
+    */
     function startUserMedia(stream) {
         var input = audio_context.createMediaStreamSource(stream);
         console.log("Media stream created.");
@@ -117,8 +118,8 @@ $(function() {
 
             isDubPressed = false;
 
-            $("#bdub,#brev,#bpub").attr("disabled", "disabled");
-            $("#bplay").removeAttr("disabled");
+            $("#brev,#bpub").attr("disabled", "disabled");
+            $("#bplay,#bdub").removeAttr("disabled");
             currentElt.toggleClass("thumb player");
             $("#grid").isotope({
                 filter: ".player"
@@ -165,9 +166,9 @@ function dub() {
 
 function review() {
     if (currentElt !== undefined) {
-        $("#bplay,#bdub,#brev,#bpub").attr("disabled", "disabled");
+        $("#bplay,#bdub,#brev").attr("disabled", "disabled");
         recorder.getBuffer(function(buffers) {
-            var newSource = audio_context.createBufferSource();
+            newSource = audio_context.createBufferSource();
             var newBuffer = audio_context.createBuffer(1, buffers[0].length, audio_context.sampleRate);
             newBuffer.getChannelData(0).set(buffers[0]);
             newSource.buffer = newBuffer;
@@ -186,6 +187,9 @@ function review() {
 
 function cancel() {
     if (currentElt !== undefined) {
+        currentElt[0].pause();
+        if (newSource !== undefined)
+            newSource.stop();
         if (recorder !== undefined)
             recorder.stop();
         $("#control").toggle(300);
@@ -207,6 +211,9 @@ function cancel() {
 }
 
 function publish() {
+    currentElt[0].pause();
+    if (newSource !== undefined)
+        newSource.stop();
     recorder.exportWAV(function(b64) {
         form = new FormData();
         form.append("video", currentElt.attr('id'));
