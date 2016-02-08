@@ -103,8 +103,7 @@ app.post('/upload', function(req, res) {
       client.select(3, function(err) {
           client.incr("dpcount", function(err, dpcount) {
               var dpid = "um" + pad(dpcount, 4);
-              uploadToYoutube("/tmp/test.webm", "#" + dpcount + " Parle avec elles", "Réalisé dans le cadre du Mois des femmes 2016 organisé par la Direction Vie des campus de l'Université de Montpellier.\ninstallation interactive tactile doublage vidéo développé par David Olivari.\nDu 7 mars au 7 avril 2016 à la fontaine numérique - (S) pace - Campus Triolet.
-                ", function(err, data) {
+              uploadToYoutube("/tmp/test.webm", "#" + dpcount + " Parle avec elles", "Réalisé dans le cadre du Mois des femmes 2016 organisé par la Direction Vie des campus de l'Université de Montpellier.\ninstallation interactive tactile doublage vidéo développé par David Olivari.\nDu 7 mars au 7 avril 2016 à la fontaine numérique - (S) pace - Campus Triolet.", function(err, data) {
                 client.set(dpid, "https://www.youtube.com/watch?v=" + data, function(err, ret) {
                   console.log("done yt upload", err, dpid, "https://www.youtube.com/watch?v=" + data);
                 });
