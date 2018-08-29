@@ -95,9 +95,9 @@ $(function() {
         if (currentElt.hasClass("thumb")) {
 
             $(".thumb").each(function() {
-                this.pause();
                 this.loop = 0;
-                this.currentTime = 0;
+		this.pause();
+		this.currentTime = 0;
             });
 
             if (recorder !== undefined)
@@ -242,7 +242,7 @@ function publish() {
             setTimeout(function() {
                 $('#linkbox').fadeOut();
                 cancel();
-            }, 8000);
+            }, 15000);
         };
 
         request.open(
